@@ -1,13 +1,25 @@
 define(['vec2d'], function (v) {
+
+    var pickup = 20 / 2; // How fast ya reckon this thing'll go?
+    var drag = -30; // pixels per second^2 (drag)
+
     function Tank(position, orientation) {
-        this.pos = position;
-        this.ori = orientation;
-        this.vel = 0;
-        this.acc = 0;
+        this.pos = position; // vector (pixels, pixels)
+        this.ori = orientation; // radians
+        this.vel = 0; // pixels per second
+        this.acc = 0; // pixels per second^2
     }
 
     Tank.prototype.update = function (dt) {
-        this.ori += (Math.PI/3000) * dt;
+        this.acc += (drag/dt) * this.vel;
+        this.vel += this.acc / dt;
+        this.pos.add(v(this.vel * Math.cos(this.ori),this.vel * Math.sin(this.ori)));
+
+        this.acc = 0; // Accelleration isn't carried over from update cycle to update cycle.
+    };
+
+    Tank.prototype.vroom = function (x) {
+        this.acc = pickup * x; // pixels per second
     };
 
     Tank.prototype.draw = function (ctx) {
@@ -18,7 +30,7 @@ define(['vec2d'], function (v) {
         ctx.save();
         
         ctx.translate(this.pos.x,this.pos.y);
-        ctx.rotate(this.ori);
+        ctx.rotate(this.ori-(Math.PI/2));
 
         var gap = 0.8;
         var length = 30;
