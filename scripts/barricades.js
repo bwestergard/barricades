@@ -1,6 +1,6 @@
-require(['domReady', 'Tank', 'vec2d'], function (domReady, Tank, v) {
+var cnvs, ctx;
 
-    var cnvs, ctx;
+require(['domReady', 'Tank', 'vec2d'], function (domReady, Tank, v) {
 
     function drawShell(x, y) {
         ctx.fillStyle = "rgba(255, 255, 255, 0.9)";

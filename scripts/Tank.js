@@ -13,6 +13,11 @@ define(['vec2d'], function (v) {
     Tank.prototype.update = function (dt) {
         this.acc += (drag/dt) * this.vel;
         this.vel += this.acc / dt;
+
+        if ((this.pos.x > cnvs.width) || (this.pos.x < 0) || (this.pos.y > cnvs.height) || (this.pos.y < 0)) {
+            this.vel *= -1;
+        }
+
         this.pos.add(v(this.vel * Math.cos(this.ori),this.vel * Math.sin(this.ori)));
 
         this.acc = 0; // Accelleration isn't carried over from update cycle to update cycle.
