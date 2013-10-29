@@ -1,19 +1,20 @@
-var cnvs, ctx;
+var cnvs, ctx, socket;
 
-require(['domReady', 'Tank', 'vec2d'], function (domReady, Tank, v) {
-
-    function drawShell(x, y) {
-        ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
-        ctx.strokeStyle="rgba(240, 30, 40, 1)";
-        ctx.lineWidth = 1;
-        ctx.save();
-        ctx.translate(x,y);
-        ctx.beginPath();
-        ctx.arc(0, 0, 2, 0, 2 * Math.PI, false);
-        ctx.stroke();
-        ctx.fill();
-        ctx.restore();
+// Require.js allows us to configure shortcut alias
+require.config({
+    // The shim config allows us to configure dependencies for
+    // scripts that do not call define() to register a module
+    shim: {
+        'socketio': {
+            exports: 'io'
+        }
+    },
+    paths: {
+        socketio: '../node_modules/socket.io-client/dist/socket.io',
     }
+});
+
+require(['socketio', 'domReady', 'Tank', 'vec2d'], function (io, domReady, Tank, v) {
 
     domReady(function () {
 
@@ -56,11 +57,16 @@ require(['domReady', 'Tank', 'vec2d'], function (domReady, Tank, v) {
         var bjorn = new Tank(v(cnvs.width/2,cnvs.height/2),
                              0);
 
+        socket = io.connect('http://localhost');
+        socket.on('vroom', function (data) {
+            bjorn.vroom(1);
+        });
+
         var animate = function() {
             blank();
 
             if (keys['w']) {
-                bjorn.vroom(1);
+                socket.emit('vroom');
             }
             if (keys['s']) {
                 bjorn.vroom(-0.5);
