@@ -1,6 +1,6 @@
 define(['vec2d'], function (v) {
 
-    var pickup = 20 / 2; // How fast ya reckon this thing'll go?
+    var pickup = 7; // How fast ya reckon this thing'll go?
     var drag = -30; // pixels per second^2 (drag)
 
     function Tank(position, orientation) {
