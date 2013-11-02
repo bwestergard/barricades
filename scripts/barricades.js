@@ -11,10 +11,11 @@ require.config({
     },
     paths: {
         socketio: '../node_modules/socket.io-client/dist/socket.io',
+        lodash:  '../node_modules/lodash/lodash',
     }
 });
 
-require(['socketio', 'domReady', 'Tank', 'vec2d'], function (io, domReady, Tank, v) {
+require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash'], function (io, domReady, Tank, v, _) {
 
     domReady(function () {
 
@@ -57,32 +58,34 @@ require(['socketio', 'domReady', 'Tank', 'vec2d'], function (io, domReady, Tank,
         var bjorn = new Tank(v(cnvs.width/2,cnvs.height/2),
                              0);
 
-        socket = io.connect('http://localhost');
-        socket.on('vroom', function (data) {
-            bjorn.vroom(1);
+        socket = io.connect('/');
+
+        socket.on("count", function (players) {
+            blank();
+            _.each(players, function (player) {
+                var foo = new Tank(v(player.tank.pos.x,
+                                     player.tank.pos.y),
+                                   player.tank.ori);
+                foo.draw(ctx);
+            });
         });
 
-        var animate = function() {
-            blank();
-
+        var commandLoop = function() {
             if (keys['w']) {
                 socket.emit('vroom');
             }
             if (keys['s']) {
-                bjorn.vroom(-0.5);
+                socket.emit('rev');
             }
             if (keys['a']) {
-                bjorn.ori -= 0.06;
+                socket.emit('port');
             }
             if (keys['d']) {
-                bjorn.ori += 0.06;
+                socket.emit('star');
             }
-
-            bjorn.update(dt);
-            bjorn.draw(ctx);
         };
 
-        window.setInterval(animate, dt);
+        setInterval(commandLoop, dt);
 
     });
 

@@ -1,6 +1,6 @@
 define(['vec2d'], function (v) {
 
-    var pickup = 7; // How fast ya reckon this thing'll go?
+    var pickup = 15; // How fast ya reckon this thing'll go?
     var drag = -30; // pixels per second^2 (drag)
 
     function Tank(position, orientation) {
@@ -14,11 +14,8 @@ define(['vec2d'], function (v) {
         this.acc += (drag/dt) * this.vel;
         this.vel += this.acc / dt;
 
-        if ((this.pos.x > cnvs.width) || (this.pos.x < 0) || (this.pos.y > cnvs.height) || (this.pos.y < 0)) {
-            this.vel *= -1;
-        }
-
-        this.pos.add(v(this.vel * Math.cos(this.ori),this.vel * Math.sin(this.ori)));
+        this.pos.add(v(this.vel * Math.cos(this.ori),
+                       this.vel * Math.sin(this.ori)));
 
         this.acc = 0; // Accelleration isn't carried over from update cycle to update cycle.
     };
