@@ -22,8 +22,8 @@ define(['vec2d','PhysConst'], function (v, PhysConst) {
     };
 
     Tank.prototype.draw = function (ctx) {
-        ctx.fillStyle = "rgba(240, 30, 40, 0.2)";
-        ctx.strokeStyle="rgba(240, 30, 40, 1)";
+        ctx.fillStyle   = "rgba(240, 30, 40, 0.2)";
+        ctx.strokeStyle = "rgba(240, 30, 40, 1)";
         ctx.lineWidth = 0.8;
 
         ctx.save();
@@ -32,9 +32,9 @@ define(['vec2d','PhysConst'], function (v, PhysConst) {
         ctx.rotate(this.ori-(Math.PI/2));
 
         var gap = 0.8;
-        var length = 30;
-        var beam = 40;
-        var pivot = 0.5;
+        var length = PhysConst.tank.scale;
+        var beam   = PhysConst.tank.scale * PhysConst.tank.lbratio;
+        var pivot  = PhysConst.tank.pivot;
 
         ctx.beginPath();
         ctx.moveTo(gap,length/2);
