@@ -3,17 +3,18 @@ define(['vec2d','PhysConst'], function (v, PhysConst) {
     function Tank(position, orientation) {
         this.pos = position; // vector (pixels, pixels)
         this.ori = orientation; // radians
-        this.vel = 0; // pixels per second
+        this.vel = v(0,0); // pixels per second
         this.acc = 0; // pixels per second^2
     }
 
     Tank.prototype.update = function (dt) {
-        this.acc += (PhysConst.tank.drag/dt) * this.vel;
-        this.vel += this.acc / dt;
+        var thrust_vec = v(this.acc / dt,0).rotated(v.unit(this.ori));
+        this.vel.add(thrust_vec);
+        this.vel.scale(1 - (PhysConst.tank.dragloss / dt));
 
-        this.pos.add(v(this.vel * Math.cos(this.ori),
-                       this.vel * Math.sin(this.ori)));
+        this.pos.add(this.vel);
 
+        this.vel = (this.vel.length() <= PhysConst.freezevel) ? v(0,0) : this.vel;
         this.acc = 0; // Accelleration isn't carried over from update cycle to update cycle.
     };
 
