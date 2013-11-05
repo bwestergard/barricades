@@ -4,9 +4,9 @@
   "author": "Bjorn Westergard <bjornw@gmail.com>",
   "scripts": {"start": "node server.js"},
   "dependencies": {
-    "express": "3.4.3",
-    "socket.io": "0.9.16",
-    "socket.io-client": "0.9.16",
+    "express": "3.4.*",
+    "socket.io": "0.9.*",
+    "socket.io-client": "0.9.*",
     "requirejs": "*",
     "lodash": "*"
   }
