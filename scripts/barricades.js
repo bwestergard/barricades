@@ -15,7 +15,7 @@ require.config({
     }
 });
 
-require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash'], function (io, domReady, Tank, v, _) {
+require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst'], function (io, domReady, Tank, v, _, PhysConst) {
 
     domReady(function () {
 

@@ -5,7 +5,8 @@ requirejs.config({
     paths: {
         socketio: '../node_modules/socket.io-client/dist/socket.io',
         lodash: '../node_modules/lodash/lodash',
-        Tank: 'scripts/Tank'
+        Tank: 'scripts/Tank',
+        PhysConst: 'scripts/PhysConst'
     }
 });
 

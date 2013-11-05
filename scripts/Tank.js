@@ -1,7 +1,4 @@
-define(['vec2d'], function (v) {
-
-    var pickup = 15; // How fast ya reckon this thing'll go?
-    var drag = -30; // pixels per second^2 (drag)
+define(['vec2d','PhysConst'], function (v, PhysConst) {
 
     function Tank(position, orientation) {
         this.pos = position; // vector (pixels, pixels)
@@ -11,7 +8,7 @@ define(['vec2d'], function (v) {
     }
 
     Tank.prototype.update = function (dt) {
-        this.acc += (drag/dt) * this.vel;
+        this.acc += (PhysConst.tank.drag/dt) * this.vel;
         this.vel += this.acc / dt;
 
         this.pos.add(v(this.vel * Math.cos(this.ori),
@@ -21,7 +18,7 @@ define(['vec2d'], function (v) {
     };
 
     Tank.prototype.vroom = function (x) {
-        this.acc = pickup * x; // pixels per second
+        this.acc = PhysConst.tank.pickup * x; // pixels per second
     };
 
     Tank.prototype.draw = function (ctx) {
