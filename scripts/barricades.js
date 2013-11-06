@@ -66,6 +66,7 @@ require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst'], functi
                 var foo = new Tank(v(player.tank.pos.x,
                                      player.tank.pos.y),
                                    player.tank.ori);
+                foo.vel = v(player.tank.vel.x,player.tank.vel.y);
                 foo.draw(ctx);
             });
         });
