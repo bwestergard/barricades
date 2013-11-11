@@ -1,5 +1,9 @@
 define(['vec2d','PhysConst'], function (v, PhysConst) {
 
+    Number.prototype.mod = function(n) {
+        return ((this%n)+n)%n;
+    }
+
     function Tank(position, orientation) {
         this.pos = position; // vector (pixels, pixels)
         this.ori = orientation; // radians
@@ -13,14 +17,14 @@ define(['vec2d','PhysConst'], function (v, PhysConst) {
 
         var thrust_vec = v(this.acc / dt,0).rotated(nose);
         this.vel.add(thrust_vec);
-        this.vel.scale(1 - (PhysConst.tank.dragloss / dt));
+        this.vel.scale(1 - (PhysConst.tank.dragLoss / dt));
 
         var against = ortho_nose.scale(this.vel.dot(ortho_nose));
-        this.vel.add(against.scale(-1).scale(PhysConst.tank.skate_factor / dt));
+        this.vel.add(against.scale(-1).scale(PhysConst.tank.skateFactor / dt));
 
         this.pos.add(this.vel);
 
-        this.vel = (this.vel.length() <= PhysConst.freezevel) ? v(0,0) : this.vel;
+        this.vel = (this.vel.length() <= PhysConst.animation.freezeVel) ? v(0,0) : this.vel;
         this.acc = 0; // Accelleration isn't carried over from update cycle to update cycle.
     };
 
@@ -28,13 +32,18 @@ define(['vec2d','PhysConst'], function (v, PhysConst) {
         this.acc = PhysConst.tank.pickup * x; // pixels per second
     };
 
-    Tank.prototype.draw = function (ctx) {
+    Tank.prototype.turn = function (x) {
+        var dt = 1000 / PhysConst.animation.frameRate;
+        this.ori += dt * PhysConst.tank.turnSpeed * x;
+    };
+
+    Tank.prototype.draw = function (ctx, perspective) {
         var nose = v.unit(this.ori);
         var ortho_nose = v.unit(this.ori+Math.PI/2);
 
         ctx.save();
         
-        ctx.translate(this.pos.x,this.pos.y);
+        ctx.translate(this.pos.x,this.pos.y-perspective.y+(450/2));
 
         if (window.debug) {
             var indicator = this.vel.scaled(10);
@@ -77,7 +86,7 @@ define(['vec2d','PhysConst'], function (v, PhysConst) {
 
         var gap = 0.8;
         var length = PhysConst.tank.scale;
-        var beam   = PhysConst.tank.scale * PhysConst.tank.lbratio;
+        var beam   = PhysConst.tank.scale * PhysConst.tank.lbRatio;
         var pivot  = PhysConst.tank.pivot;
 
         ctx.beginPath();

@@ -53,21 +53,24 @@ require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst'], functi
             ctx.fillRect  (0,0, cnvs.width, cnvs.height);
         }
 
-        var dt = 1000/40; // milliseconds
-
-        var bjorn = new Tank(v(cnvs.width/2,cnvs.height/2),
-                             0);
+        var dt = 1000/PhysConst.animation.frameRate; // milliseconds
 
         socket = io.connect('/');
 
         socket.on("count", function (players) {
+            var me = players[socket.socket.sessionid];
+
             blank();
+
             _.each(players, function (player) {
-                var foo = new Tank(v(player.tank.pos.x,
-                                     player.tank.pos.y),
-                                   player.tank.ori);
-                foo.vel = v(player.tank.vel.x,player.tank.vel.y);
-                foo.draw(ctx);
+                var tank = new Tank(v(player.tank.pos.x,
+                                      player.tank.pos.y),
+                                    player.tank.ori);
+
+                tank.vel = v(player.tank.vel.x,
+                             player.tank.vel.y);
+
+                tank.draw(ctx, me.tank.pos);
             });
         });
 

@@ -1,11 +1,22 @@
 define({
-    "freezevel": 1e-2,
+    "animation": {
+        "freezeVel": 1e-2,
+        "frameRate": 30
+    },
     "tank": {
         "pickup": 10,
-        "dragloss": 0.50,
-        "skate_factor": 1000/33 * 0.5,
+        "dragLoss": 0.3,
+        "skateFactor": 4,
         "scale": 30,
-        "lbratio": 4/3,
-        "pivot": 2/3
+        "lbRatio": 4/3,
+        "pivot": 2/3,
+        "turnSpeed": 0.002
+    },
+    "world": {
+        "aspectRatio": 6
+    },
+    "viewPort": {
+        "width": 900,
+        "height": 450
     }
 });
