@@ -7,7 +7,8 @@ requirejs.config({
         lodash: '../node_modules/lodash/lodash',
         Tank: 'scripts/Tank',
         PhysConst: 'scripts/PhysConst',
-        World: 'scripts/World'
+        World: 'scripts/World',
+        screenProjection: 'scripts/screenProjection'
     }
 });
 

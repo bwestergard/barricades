@@ -1,4 +1,4 @@
-define(['vec2d','PhysConst'], function (v, PhysConst) {
+define(['vec2d','PhysConst', 'screenProjection'], function (v, PhysConst, screenProjection) {
 
     Number.prototype.mod = function(n) {
         return ((this%n)+n)%n;
@@ -43,15 +43,19 @@ define(['vec2d','PhysConst'], function (v, PhysConst) {
 
         ctx.save();
         
-        ctx.translate(this.pos.x,this.pos.y-perspective.y+(450/2));
+        var screenPosition = screenProjection.projectScreen(perspective, this.pos);
+        ctx.translate(screenPosition.x, screenPosition.y);
 
-        if (window.debug) {
+        if (window.debug || true) {
             var indicator = this.vel.scaled(10);
             var along = nose.scale(this.vel.dot(nose)).scale(10);
             var against = ortho_nose.scale(this.vel.dot(ortho_nose)).scale(10);
 
             ctx.save();
             ctx.strokeStyle = "rgba(255, 255, 255, 1)";
+            ctx.fillStyle = "rgba(255, 255, 255, 1)";
+
+            ctx.fillText("(" + Math.floor(this.pos.x) + ", " + Math.floor(this.pos.y) + ")", 10, 50);
 
             ctx.beginPath();
             ctx.moveTo(0,0);
