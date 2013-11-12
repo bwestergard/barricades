@@ -1,4 +1,4 @@
-define(['vec2d', 'lodash', 'PhysConst'], function (v, _, PhysConst) {
+define(['vec2d', 'lodash', 'PhysConst', 'screenProjection'], function (v, _, PhysConst, screenProjection) {
 
     function World() {
         this.bodies = [];
@@ -12,17 +12,12 @@ define(['vec2d', 'lodash', 'PhysConst'], function (v, _, PhysConst) {
         _.pull(this.bodies, body);
     };
 
-    World.prototype._wrapVector = function (vector) {
-        var size = PhysConst.viewPort.height; // * PhyConst.world.aspectRatio;
-        return v(vector.x, ((vector.y%size)+size)%size); // JavaScript's modulo operator is not quite what you'd expect. This does something more like what you'd expect from y%size. 
-    };
-
     World.prototype.update = function (dt) {
         var world = this;
         _.each(this.bodies, function (body) {
             body.update(dt);
 
-            body.pos = world._wrapVector(body.pos);
+            body.pos.y = screenProjection.wrap(body.pos.y);
 
             // TODO: Modulo-clamp vectors' y-value to (PhysConst.viewport.height * PhysConst.world.aspectRatio)
         });

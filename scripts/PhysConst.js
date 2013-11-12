@@ -13,7 +13,7 @@ define({
         "turnSpeed": 0.0018
     },
     "world": {
-        "aspectRatio": 6
+        "aspectRatio": 8
     },
     "viewPort": {
         "width": 900,
