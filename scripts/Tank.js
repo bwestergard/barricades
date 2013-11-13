@@ -1,15 +1,26 @@
 define(['vec2d','PhysConst', 'screenProjection'], function (v, PhysConst, screenProjection) {
 
-    Number.prototype.mod = function(n) {
-        return ((this%n)+n)%n;
-    }
-
     function Tank(position, orientation) {
         this.pos = position; // vector (pixels, pixels)
         this.ori = orientation; // radians
         this.vel = v(0,0); // pixels per second
         this.acc = 0; // pixels per second^2
     }
+
+    Tank.prototype.verts = function () {
+        var length = PhysConst.tank.scale;
+        var beam   = PhysConst.tank.scale * PhysConst.tank.lbRatio;
+        var pivot  = PhysConst.tank.pivot;
+
+        var rotation = v.unit(this.ori+Math.PI/2);
+        var nose = v(0, -1 * length/2).rotate(rotation);
+        var port = v(-1 * beam/2, length/2).rotate(rotation);
+        var star = v(beam/2,length/2).rotate(rotation);
+
+        return [nose,
+                port,
+                star];
+    };
 
     Tank.prototype.update = function (dt) {
         var nose = v.unit(this.ori);
@@ -56,6 +67,11 @@ define(['vec2d','PhysConst', 'screenProjection'], function (v, PhysConst, screen
             ctx.fillStyle = "rgba(255, 255, 255, 1)";
 
             ctx.fillText("(" + Math.floor(this.pos.x) + ", " + Math.floor(this.pos.y) + ")", 10, 50);
+
+            var verts = this.verts();
+            _.each(verts, function (vert) {
+                ctx.fillRect(vert.x,vert.y,5,5);
+            });
 
             ctx.beginPath();
             ctx.moveTo(0,0);

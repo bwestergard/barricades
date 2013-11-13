@@ -5,9 +5,9 @@ define({
     },
     "tank": {
         "pickup": 10,
-        "dragLoss": 0.5,
+        "dragLoss": 1,
         "skateFactor": 4,
-        "scale": 30,
+        "scale": 40,
         "lbRatio": 4/3,
         "pivot": 2/3,
         "turnSpeed": 0.0018
