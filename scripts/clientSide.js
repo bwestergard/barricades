@@ -67,10 +67,12 @@ require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst'], functi
                                       player.tank.pos.y),
                                     player.tank.ori);
 
+                tank.colliding = player.tank.colliding;
                 tank.vel = v(player.tank.vel.x,
                              player.tank.vel.y);
 
                 tank.draw(ctx, me.tank.pos);
+                console.log(tank);
             });
         });
 

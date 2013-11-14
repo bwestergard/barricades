@@ -8,7 +8,9 @@ requirejs.config({
         Tank: 'scripts/Tank',
         PhysConst: 'scripts/PhysConst',
         World: 'scripts/World',
-        screenProjection: 'scripts/screenProjection'
+        screenProjection: 'scripts/screenProjection',
+        geometry: 'scripts/geometry',
+        SAT: 'scripts/SAT'
     }
 });
 

@@ -1,4 +1,4 @@
-define(['vec2d', 'lodash', 'PhysConst', 'screenProjection'], function (v, _, PhysConst, screenProjection) {
+define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry'], function (v, _, PhysConst, screenProjection, geometry) {
 
     function World() {
         this.bodies = [];
@@ -14,15 +14,15 @@ define(['vec2d', 'lodash', 'PhysConst', 'screenProjection'], function (v, _, Phy
 
     World.prototype.update = function (dt) {
         var world = this;
-        _.each(this.bodies, function (body) {
+        _.each(world.bodies, function (body) {
             body.update(dt);
 
             body.pos.y = screenProjection.wrap(body.pos.y);
 
-            // TODO: Modulo-clamp vectors' y-value to (PhysConst.viewport.height * PhysConst.world.aspectRatio)
+            _.each(_.without(world.bodies, body), function (other) {
+                body.colliding = geometry.collide(body.verts(), other.verts());                    
+            });
         });
-
-        // TODO: Detect collisions, react
     };
 
 

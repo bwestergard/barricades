@@ -17,7 +17,8 @@ define(['vec2d','PhysConst', 'screenProjection'], function (v, PhysConst, screen
         var port = v(-1 * beam/2, length/2).rotate(rotation);
         var star = v(beam/2,length/2).rotate(rotation);
 
-        return [nose,
+        return [this.pos,
+                nose,
                 port,
                 star];
     };
@@ -35,7 +36,6 @@ define(['vec2d','PhysConst', 'screenProjection'], function (v, PhysConst, screen
 
         this.pos.add(this.vel);
 
-        this.vel = (this.vel.length() <= PhysConst.animation.freezeVel) ? v(0,0) : this.vel;
         this.acc = 0; // Accelleration isn't carried over from update cycle to update cycle.
     };
 
@@ -57,6 +57,11 @@ define(['vec2d','PhysConst', 'screenProjection'], function (v, PhysConst, screen
         var screenPosition = screenProjection.projectScreen(perspective, this.pos);
         ctx.translate(screenPosition.x, screenPosition.y);
 
+        if (this.colliding) {
+            ctx.fillStyle = "rgba(255, 255, 255, 1)";
+            ctx.fillRect(0,0,15,15);
+        }
+
         if (window.debug || true) {
             var indicator = this.vel.scaled(10);
             var along = nose.scale(this.vel.dot(nose)).scale(1);
@@ -69,7 +74,7 @@ define(['vec2d','PhysConst', 'screenProjection'], function (v, PhysConst, screen
             ctx.fillText("(" + Math.floor(this.pos.x) + ", " + Math.floor(this.pos.y) + ")", 10, 50);
 
             var verts = this.verts();
-            _.each(verts, function (vert) {
+            _.each(_.rest(verts), function (vert) {
                 ctx.fillRect(vert.x,vert.y,5,5);
             });
 
