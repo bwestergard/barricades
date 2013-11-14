@@ -15,7 +15,7 @@ require.config({
     }
 });
 
-require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst'], function (io, domReady, Tank, v, _, PhysConst) {
+require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst', 'World'], function (io, domReady, Tank, v, _, PhysConst, World) {
 
     domReady(function () {
 
@@ -58,6 +58,7 @@ require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst'], functi
         socket = io.connect('/');
 
         socket.on("count", function (players) {
+            var world = new World();
             var me = players[socket.socket.sessionid];
 
             blank();
@@ -66,14 +67,14 @@ require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst'], functi
                 var tank = new Tank(v(player.tank.pos.x,
                                       player.tank.pos.y),
                                     player.tank.ori);
-
                 tank.colliding = player.tank.colliding;
                 tank.vel = v(player.tank.vel.x,
                              player.tank.vel.y);
 
-                tank.draw(ctx, me.tank.pos);
-                console.log(tank);
+                world.addBody(tank);
             });
+
+            world.draw(ctx, me.tank.pos);
         });
 
         var commandLoop = function() {

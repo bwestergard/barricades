@@ -1,8 +1,12 @@
 define(['vec2d','PhysConst'], function (v, PhysConst) {
 
+    function mod(x,n) {
+        return((x%n)+n)%n;
+    }
+
     function wrap(y) {
         var size = PhysConst.viewPort.height * PhysConst.world.aspectRatio;
-        return ((y%size)+size)%size; // JavaScript's modulo operator is not quite what you'd expect. This does something more like what you'd expect from y%size. 
+        return mod(y, size); // JavaScript's modulo operator is not quite what you'd expect. This does something more like what you'd expect from y%size. 
     }
 
     function projectScreen(perspective, vector) {
@@ -29,7 +33,8 @@ define(['vec2d','PhysConst'], function (v, PhysConst) {
 
     return {
         "projectScreen": projectScreen,
-        "wrap": wrap
+        "wrap": wrap,
+        "mod": mod
     };
 
 });

@@ -62,7 +62,7 @@ define(['vec2d','PhysConst', 'screenProjection'], function (v, PhysConst, screen
             ctx.fillRect(0,0,15,15);
         }
 
-        if (window.debug || true) {
+        if (window.debug) {
             var indicator = this.vel.scaled(10);
             var along = nose.scale(this.vel.dot(nose)).scale(1);
             var against = ortho_nose.scale(this.vel.dot(ortho_nose)).scale(10);

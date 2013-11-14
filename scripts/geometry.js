@@ -18,7 +18,8 @@ define(['lodash', 'vec2d', 'SAT'], function (_, v, SAT) {
         B = convertPolygon(B);
 
         var response = new SAT.Response();
-        return SAT.testPolygonPolygon(A, B, response); 
+        var collision = SAT.testPolygonPolygon(A, B, response); 
+        return [collision, response];
     }
 
     return {
