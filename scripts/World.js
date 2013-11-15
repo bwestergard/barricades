@@ -22,9 +22,9 @@ define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry'], functio
             _.each(_.without(world.bodies, body), function (other) {
                 var results = geometry.collide(body.verts(), other.verts());                    
                 body.colliding = results[0];
-//              other.pos.add(v(results[1].overlapV.x, results[1].overlapV.y));
-                other.vel.add(v(results[1].overlapV.x, results[1].overlapV.y).scale(0.5));;
-                body.vel.add(v(results[1].overlapV.x, results[1].overlapV.y).scale(-0.5));;
+                other.pos.add(v(results[1].overlapV.x, results[1].overlapV.y));
+                other.vel.add(v(results[1].overlapV.x, results[1].overlapV.y).scale(0.1));;
+                body.vel.add(v(results[1].overlapV.x, results[1].overlapV.y).scale(-0.1));;
             });
         });
     };
