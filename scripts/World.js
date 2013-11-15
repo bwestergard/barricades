@@ -34,7 +34,7 @@ define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry'], functio
         ctx.save();
         ctx.lineWidth = 1;
         ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
-        var reticules = 5;
+        var reticules = 8;
         var retSep = PhysConst.viewPort.height / reticules;
 
         for (var i = 0; i < reticules; i++) {
