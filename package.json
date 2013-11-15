@@ -9,5 +9,6 @@
         "socket.io-client": "0.9.*",
         "requirejs": "*",
         "lodash": "*",
+        "gl-matrix": "2.0.0"
     }
 }
