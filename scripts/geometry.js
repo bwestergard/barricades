@@ -9,7 +9,7 @@ define(['lodash', 'vec2d', 'SAT'], function (_, v, SAT) {
         });
 
         var satPoly = new P(_.first(satVerts),
-                            _.rest(satVerts));
+                            _.rest(satVerts).reverse());
         return satPoly;
     }
 
