@@ -14,19 +14,25 @@ define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry'], functio
 
     World.prototype.update = function (dt) {
         var world = this;
-        _.each(world.bodies, function (body) {
+
+        for (var i = 0; i < world.bodies.length; i++) {
+            var body = world.bodies[i];
+          
+            for (var j = i+1; j < world.bodies.length; j++) {
+                var other = world.bodies[j];
+
+                var results = geometry.collide(body.verts(), other.verts());                    
+                body.colliding = results[0];
+                other.vel.add(v(results[1].overlapV.x, results[1].overlapV.y));
+                body.vel.add(v(results[1].overlapV.x, results[1].overlapV.y).scale(-1));
+            }
+
             body.update(dt);
 
             body.pos.y = screenProjection.wrap(body.pos.y);
 
-            _.each(_.without(world.bodies, body), function (other) {
-                var results = geometry.collide(body.verts(), other.verts());                    
-                body.colliding = results[0];
-                other.pos.add(v(results[1].overlapV.x, results[1].overlapV.y));
-                other.vel.add(v(results[1].overlapV.x, results[1].overlapV.y).scale(0.1));;
-                body.vel.add(v(results[1].overlapV.x, results[1].overlapV.y).scale(-0.1));;
-            });
-        });
+        }
+        
     };
 
 
