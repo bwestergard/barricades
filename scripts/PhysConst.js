@@ -17,7 +17,7 @@ define({
         "turnDrag": 0.8
     },
     "world": {
-        "aspectRatio": 4
+        "aspectRatio": 1
     },
     "viewPort": {
         "width": 900,

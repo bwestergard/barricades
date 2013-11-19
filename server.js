@@ -68,7 +68,9 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
         });
 
         socket.on('disconnect', function () {
+            world.removeBody(players[socket.id].tank);
             delete players[socket.id];
+          
             io.sockets.emit('count', players);
         });
     });

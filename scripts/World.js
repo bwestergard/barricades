@@ -23,7 +23,10 @@ define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry'], functio
 
                 var results = geometry.collide(body.verts(), other.verts());                    
                 body.colliding = other.colliding = results[0];
-                if (results[0]) {                    
+                if (results[0]) {
+                    console.log("collision! " + i + " " + j);
+                    console.log(body);
+                    console.log(other);
                     other.vel.add(v(results[1].overlapV.x, results[1].overlapV.y));
                     body.vel.add(v(results[1].overlapV.x, results[1].overlapV.y).scale(-1)); 
                 }
