@@ -27,8 +27,8 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
     var players = {};
 
     var new_player = function (id) {
-        var tank = new Tank(v(PhysConst.viewPort.width/2,
-                              0),
+        var tank = new Tank(v(Math.random() * PhysConst.viewPort.width,
+                              PhysConst.viewPort.height),
                             -1*Math.PI/2);
         return {
             'tank': tank
@@ -42,6 +42,8 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
         world.update(dt);
         io.sockets.emit('count', players);
     }, dt);
+
+    io.set('log level', 1);
 
     io.sockets.on('connection', function (socket) {        
         players[socket.id] = new_player();

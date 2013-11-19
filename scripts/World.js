@@ -22,9 +22,11 @@ define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry'], functio
                 var other = world.bodies[j];
 
                 var results = geometry.collide(body.verts(), other.verts());                    
-                body.colliding = results[0];
-                other.vel.add(v(results[1].overlapV.x, results[1].overlapV.y));
-                body.vel.add(v(results[1].overlapV.x, results[1].overlapV.y).scale(-1));
+                body.colliding = other.colliding = results[0];
+                if (results[0]) {                    
+                    other.vel.add(v(results[1].overlapV.x, results[1].overlapV.y));
+                    body.vel.add(v(results[1].overlapV.x, results[1].overlapV.y).scale(-1)); 
+                }
             }
 
             body.update(dt);

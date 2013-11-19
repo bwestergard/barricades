@@ -4,6 +4,7 @@ define(['vec2d','PhysConst', 'screenProjection'], function (v, PhysConst, screen
         this.pos = position; // vector (pixels, pixels)
         this.ori = orientation; // radians
         this.vel = v(0,0); // pixels per second
+        this.rot = 0; // rotational velocity
         this.acc = 0; // pixels per second^2
     }
 
@@ -28,13 +29,14 @@ define(['vec2d','PhysConst', 'screenProjection'], function (v, PhysConst, screen
         var ortho_nose = v.unit(this.ori+Math.PI/2);
 
         var thrust_vec = v(this.acc / dt,0).rotated(nose);
+        var against = ortho_nose.scale(this.vel.dot(ortho_nose));
         this.vel.add(thrust_vec);
         this.vel.scale(1 - (PhysConst.tank.dragLoss / dt));
-
-        var against = ortho_nose.scale(this.vel.dot(ortho_nose));
         this.vel.add(against.scale(-1).scale(PhysConst.tank.skateFactor / dt));
 
+        this.rot *= PhysConst.tank.turnDrag;
         this.pos.add(this.vel);
+        this.ori += this.rot;
 
         this.acc = 0; // Accelleration isn't carried over from update cycle to update cycle.
     };
@@ -45,7 +47,7 @@ define(['vec2d','PhysConst', 'screenProjection'], function (v, PhysConst, screen
 
     Tank.prototype.turn = function (x) {
         var dt = 1000 / PhysConst.animation.frameRate;
-        this.ori += dt * PhysConst.tank.turnSpeed * x;
+        this.rot = dt * PhysConst.tank.turnSpeed * x;
     };
 
     Tank.prototype.draw = function (ctx, perspective) {
@@ -64,7 +66,7 @@ define(['vec2d','PhysConst', 'screenProjection'], function (v, PhysConst, screen
 
         if (window.debug) {
             var indicator = this.vel.scaled(10);
-            var along = nose.scale(this.vel.dot(nose)).scale(1);
+            var along = nose.scale(this.vel.dot(nose));
             var against = ortho_nose.scale(this.vel.dot(ortho_nose)).scale(10);
 
             ctx.save();
