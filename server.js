@@ -1,4 +1,6 @@
-var requirejs = require('requirejs');
+var requirejs = require('requirejs'),
+    uuid = require('node-uuid');
+
 
 requirejs.config({
     nodeRequire: require,
@@ -26,10 +28,12 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
     var world = new World();
     var players = {};
 
-    var new_player = function (id) {
-        var tank = new Tank(v(Math.random() * PhysConst.viewPort.width,
-                              PhysConst.viewPort.height),
-                            -1*Math.PI/2);
+    var new_player = function () {
+        var id = uuid.v1();
+        var tank = new Tank(id,
+            v(Math.random() * PhysConst.viewPort.width,
+              PhysConst.viewPort.height),
+                -1*Math.PI/2);
         return {
             'tank': tank
         };
