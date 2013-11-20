@@ -9,6 +9,5 @@
         "socket.io-client": "0.9.*",
         "requirejs": "*",
         "lodash": "*",
-        "node-uuid": "*"
     }
 }
