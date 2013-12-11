@@ -64,7 +64,8 @@ require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst', 'World'
             blank();
 
             _.each(players, function (player) {
-                var tank = new Tank(v(player.tank.pos.x,
+                var tank = new Tank('foobar', // UUID will go here.
+                                    v(player.tank.pos.x,
                                       player.tank.pos.y),
                                     player.tank.ori);
                 tank.colliding = player.tank.colliding;

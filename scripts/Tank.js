@@ -1,6 +1,7 @@
 define(['vec2d','PhysConst', 'screenProjection'], function (v, PhysConst, screenProjection) {
 
-    function Tank(position, orientation) {
+    function Tank(id, position, orientation) {
+        this.id = id;
         this.pos = position; // vector (pixels, pixels)
         this.ori = orientation; // radians
         this.vel = v(0,0); // pixels per second
