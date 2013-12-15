@@ -37,7 +37,6 @@ define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry'], functio
         
     };
 
-
     World.prototype._drawReticules = function (ctx, perspective) {
         ctx.save();
         ctx.lineWidth = 1;

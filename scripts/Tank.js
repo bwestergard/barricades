@@ -9,6 +9,14 @@ define(['vec2d','PhysConst', 'screenProjection'], function (v, PhysConst, screen
         this.acc = 0; // pixels per second^2
     }
 
+    Tank.prototype.serialize = function () {
+        var plain = _.pick(this, 'id', 'pos', 'ori', 'rot', 'acc');
+        var pos = { 'x': this.pos.x, 'y': this.pos.y };
+        plain.pos = pos;
+        plain.type = "tank";
+        return plain;
+    };
+
     Tank.prototype.verts = function () {
         var length = PhysConst.tank.scale;
         var beam   = PhysConst.tank.scale * PhysConst.tank.lbRatio;
