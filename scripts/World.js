@@ -1,25 +1,27 @@
 define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry'], function (v, _, PhysConst, screenProjection, geometry) {
 
     function World() {
-        this.bodies = [];
+        this.bodies = {};
     }
 
-    World.prototype.addBody = function (body) {
-        this.bodies.push(body);
+    World.prototype.addBody = function (id, body) {        
+        this.bodies[id] = body;
     };
 
-    World.prototype.removeBody = function (body) {
-        _.pull(this.bodies, body);
+    World.prototype.removeBody = function (id) {
+        delete this.bodies[id];
     };
 
     World.prototype.update = function (dt) {
         var world = this;
 
-        for (var i = 0; i < world.bodies.length; i++) {
-            var body = world.bodies[i];
+        var bodies = _.toArray(this.bodies);
+
+        for (var i = 0; i < bodies.length; i++) {
+            var body = bodies[i];
           
-            for (var j = i+1; j < world.bodies.length; j++) {
-                var other = world.bodies[j];
+            for (var j = i+1; j < bodies.length; j++) {
+                var other = bodies[j];
 
                 var results = geometry.collide(body.verts(), other.verts());                    
                 body.colliding = other.colliding = results[0];

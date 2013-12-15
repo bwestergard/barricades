@@ -1,6 +1,5 @@
 var requirejs = require('requirejs'),
-    uuid = require('node-uuid');
-
+uuid = require('node-uuid');
 
 requirejs.config({
     nodeRequire: require,
@@ -16,29 +15,26 @@ requirejs.config({
     }
 });
 
-requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst', 'World'], function (express, socketio, http, _, Tank, v, PhysConst, World) {
+requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst', 'World'],
+          function (express, socketio, http, _, Tank, v, PhysConst, World) {
 
     var app = express()
     , server = http.createServer(app).listen(80)
     , io = socketio.listen(server);
- 
+    
     app.use('/io.js', express.static(__dirname + "/node_modules/socket.io/socket.io.js"));
     app.use('/', express.static(__dirname));
 
     var world = new World();
     var players = {};
 
-    var new_player = function () {
-        var tank = new Tank(
-            v(Math.random() * PhysConst.viewPort.width,
+    var new_tank = function () {
+        return new Tank(
+            v(PhysConst.viewPort.width * Math.random(),
               PhysConst.viewPort.height),
-              -1*Math.PI/2);
-        return {
-            'tank': tank
-        };
+                -1*Math.PI/2);
     };
 
-    
     var dt = 1000/PhysConst.animation.frameRate;
 
     setInterval(function () {
@@ -48,9 +44,11 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
 
     io.set('log level', 1);
 
-    io.sockets.on('connection', function (socket) {        
-        players[socket.id] = new_player();
-        world.addBody(players[socket.id].tank);
+    io.sockets.on('connection', function (socket) {
+        var tank = new_tank();
+        var id = uuid.v1();
+        world.addBody(id, tank);
+        players[socket.id] = { bodyId: id, tank: tank };
 
         io.sockets.emit('count', players);
 
@@ -58,7 +56,7 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
             players[socket.id].tank.vroom(1);
         });
 
-       socket.on('rev', function (data) {
+        socket.on('rev', function (data) {
             players[socket.id].tank.vroom(-1);
         });
 
@@ -71,9 +69,9 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
         });
 
         socket.on('disconnect', function () {
-            world.removeBody(players[socket.id].tank);
+            world.removeBody(players[socket.id].bodyId);
             delete players[socket.id];
-          
+            
             io.sockets.emit('count', players);
         });
     });

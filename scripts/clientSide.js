@@ -71,7 +71,7 @@ require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst', 'World'
                 tank.vel = v(player.tank.vel.x,
                              player.tank.vel.y);
 
-                world.addBody(tank);
+                world.addBody(player.bodyId, tank);
             });
 
             world.draw(ctx, me.tank.pos);
