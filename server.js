@@ -39,7 +39,7 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
 
     setInterval(function () {
         world.update(dt);
-        io.sockets.emit('count', players);
+        io.sockets.emit('update', players);
     }, dt);
 
     io.set('log level', 1);
@@ -50,7 +50,7 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
         world.addBody(id, tank);
         players[socket.id] = { bodyId: id, tank: tank };
 
-        io.sockets.emit('count', players);
+        io.sockets.emit('update', players);
 
         socket.on('vroom', function (data) {
             players[socket.id].tank.vroom(1);
@@ -72,7 +72,7 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
             world.removeBody(players[socket.id].bodyId);
             delete players[socket.id];
             
-            io.sockets.emit('count', players);
+            io.sockets.emit('update', players);
         });
     });
 

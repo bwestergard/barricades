@@ -57,7 +57,7 @@ require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst', 'World'
 
         socket = io.connect('/');
 
-        socket.on("count", function (players) {
+        socket.on("update", function (players) {
             var world = new World();
             var me = players[socket.socket.sessionid];
 
