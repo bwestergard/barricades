@@ -1,4 +1,4 @@
-define(['vec2d','PhysConst', 'screenProjection'], function (v, PhysConst, screenProjection) {
+define(['vec2d','PhysConst', 'screenProjection', 'lodash'], function (v, PhysConst, screenProjection, _) {
 
     function Tank(position, orientation) {
         this.pos = position; // vector (pixels, pixels)

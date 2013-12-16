@@ -19,6 +19,8 @@ require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst', 'World'
 
     domReady(function () {
 
+        var world = new World();
+
         cnvs = document.getElementById('c');
         ctx = cnvs.getContext('2d');
 
@@ -57,23 +59,12 @@ require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst', 'World'
 
         socket = io.connect('/');
 
-        socket.on("update", function (players) {
-            var world = new World();
-            var me = players[socket.socket.sessionid];
-
+        socket.on("upsert", function (world) {
             blank();
 
-            _.each(players, function (player) {
-                var tank = new Tank(v(player.tank.pos.x,
-                                      player.tank.pos.y),
-                                    player.tank.ori);
-                tank.colliding = player.tank.colliding;
-                tank.vel = v(player.tank.vel.x,
-                             player.tank.vel.y);
+            world.upsert(msg.world);
 
-                world.addBody(player.bodyId, tank);
-            });
-
+            var me = msg.world[players[socket.socket.sessionid].bodyId];
             world.draw(ctx, me.tank.pos);
         });
 

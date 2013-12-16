@@ -12,6 +12,52 @@ define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry'], functio
         delete this.bodies[id];
     };
 
+    World.prototype.removeBodies = function (ids) {
+        var world = this;
+        _.each(ids, function (id) {
+            world.removeBody(id);
+        });
+    };
+
+    World.prototype.serialize = function () {
+        return _.object(_.map(this.bodies, function (body, key) {
+            return [key, body.serialize()];
+        }));
+    };
+
+    World.prototype.sync = function (changeSet) {
+        this.upsert(changeSet.upserts);
+        this.removeBodies(changeSet.deletes);
+    };
+
+    World.prototype.upsert = function (bodyStates) {
+
+        var inserts = _.difference(_.keys(bodyStates), _.keys(this.bodies));
+        var updates = _.union(_.keys(bodyStates), _.keys(this.bodies));
+
+        _.each(_.pick(bodyStates, inserts), function (body) {
+            // switch statement for instantiation of objects by type
+        });
+
+        _.each(_.pick(bodyStates, updates), function (body) {
+            
+        });
+
+        // inserts = _.difference(bodies, this.bodies);
+        // updates = union(bodies, this.bodies);
+
+        _.each(bodies, function (body, key) {
+            var body = new Tank(v(body.pos.x,
+                                  body.pos.y),
+                                body.ori);
+            body.colliding = body.tank.colliding;
+            body.vel = v(body.tank.vel.x,
+                         body.tank.vel.y);
+
+            world.addBody(key, body);
+        });
+    };
+
     World.prototype.update = function (dt) {
         var world = this;
 
