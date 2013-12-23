@@ -83,9 +83,6 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
         socket.on('disconnect', function () {
             world.removeBody(players[socket.id].bodyId);
 
-            console.log("disconnect from...");
-            console.log(players[socket.id].bodyId);
-
             syncClients(io.sockets, {
                 upserts: {},
                 deletes: [ players[socket.id].bodyId ]
