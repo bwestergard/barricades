@@ -21,7 +21,7 @@ require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst', 'World'
     domReady(function () {
 
         var world = new World();
-        var myId = null;
+        window.myId = null;
 
         cnvs = document.getElementById('c');
         ctx = cnvs.getContext('2d');

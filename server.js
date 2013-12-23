@@ -53,11 +53,12 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
     io.sockets.on('connection', function (socket) {
         var tank = new_tank();
         var id = uuid.v1();
+        console.log("NEWBIE " + id);
         world.addBody(id, tank);
         players[socket.id] = { bodyId: id };
 
         // Initial synchronization of server-client world state. Upsert every body.
-        syncClients(io.sockets, {
+        syncClients(socket, {
             upserts: world.serialize(),
             deletes: {},
             playerId: id
