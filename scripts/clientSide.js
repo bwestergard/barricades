@@ -15,11 +15,13 @@ require.config({
     }
 });
 
-require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst', 'World'], function (io, domReady, Tank, v, _, PhysConst, World) {
+require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst', 'World'],
+        function (io, domReady, Tank, v, _, PhysConst, World) {
 
     domReady(function () {
 
         var world = new World();
+        var myId = null;
 
         cnvs = document.getElementById('c');
         ctx = cnvs.getContext('2d');
@@ -59,13 +61,14 @@ require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst', 'World'
 
         socket = io.connect('/');
 
-        socket.on("upsert", function (world) {
+        socket.on("changeSet", function (changeSet) {
+            world.sync(changeSet);
+            myId = changeSet.playerId || myId;
+
+            var me = changeSet.upserts[myId];
+
             blank();
-
-            world.upsert(msg.world);
-
-            var me = msg.world[players[socket.socket.sessionid].bodyId];
-            world.draw(ctx, me.tank.pos);
+            world.draw(ctx, me.pos);
         });
 
         var commandLoop = function() {

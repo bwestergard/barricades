@@ -1,8 +1,13 @@
-define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry'], function (v, _, PhysConst, screenProjection, geometry) {
+define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry', 'Tank'],
+       function (v, _, PhysConst, screenProjection, geometry, Tank) {
 
     function World() {
         this.bodies = {};
-    }
+    };
+
+    World.prototype.getById = function (id) {
+        return this.bodies[id];
+    };
 
     World.prototype.addBody = function (id, body) {        
         this.bodies[id] = body;
@@ -31,6 +36,7 @@ define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry'], functio
     };
 
     World.prototype.upsert = function (bodyStates) {
+        var world = this;
 
         var inserts = _.difference(_.keys(bodyStates), _.keys(this.bodies));
         var updates = _.union(_.keys(bodyStates), _.keys(this.bodies));
@@ -47,7 +53,7 @@ define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry'], functio
         });
 
         _.each(_.pick(bodyStates, _.union(updates, inserts)), function (body, key) {
-            _.extend(this.bodies[key], body);
+            _.extend(world.bodies[key], body);
         });        
     };
 

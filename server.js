@@ -59,33 +59,35 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
         // Initial synchronization of server-client world state. Upsert every body.
         syncClients(io.sockets, {
             upserts: world.serialize(),
-            deletes: {}
+            deletes: {},
+            playerId: id
         });
 
         socket.on('vroom', function (data) {
-            players[socket.id].tank.vroom(1);
+            world.getById(id).vroom(1);
         });
 
         socket.on('rev', function (data) {
-            players[socket.id].tank.vroom(-1);
+            world.getById(id).vroom(-1);
         });
 
         socket.on('port', function (data) {
-            players[socket.id].tank.turn(-1);
+            world.getById(id).turn(-1);
         });
 
         socket.on('star', function (data) {
-            players[socket.id].tank.turn(1);
+            world.getById(id).turn(1);
         });
 
         socket.on('disconnect', function () {
             world.removeBody(players[socket.id].bodyId);
-            delete players[socket.id];
 
             syncClients(io.sockets, {
                 upserts: {},
                 deletes: players[socket.id].bodyId
-            });           
+            });
+
+            delete players[socket.id];
         });
     });
 
