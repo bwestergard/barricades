@@ -45,7 +45,7 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
 
     setInterval(function () {
         var changeSet = world.update(dt);
-        syncClients(changeSet);
+        syncClients(io.sockets, changeSet);
     }, dt);
 
     io.set('log level', 1);
@@ -57,7 +57,7 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
         players[socket.id] = { bodyId: id };
 
         // Initial synchronization of server-client world state. Upsert every body.
-        syncClients({
+        syncClients(io.sockets, {
             upserts: world.serialize(),
             deletes: {}
         });
@@ -81,8 +81,11 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
         socket.on('disconnect', function () {
             world.removeBody(players[socket.id].bodyId);
             delete players[socket.id];
-            
-            sendUpdate();
+
+            syncClients(io.sockets, {
+                upserts: {},
+                deletes: players[socket.id].bodyId
+            });           
         });
     });
 
