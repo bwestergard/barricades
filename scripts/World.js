@@ -1,8 +1,13 @@
-define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry'], function (v, _, PhysConst, screenProjection, geometry) {
+define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry', 'Tank'],
+       function (v, _, PhysConst, screenProjection, geometry, Tank) {
 
     function World() {
         this.bodies = {};
-    }
+    };
+
+    World.prototype.getById = function (id) {
+        return this.bodies[id];
+    };
 
     World.prototype.addBody = function (id, body) {        
         this.bodies[id] = body;
@@ -12,10 +17,51 @@ define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry'], functio
         delete this.bodies[id];
     };
 
+    World.prototype.removeBodies = function (ids) {
+        var world = this;
+        _.each(ids, function (id) {
+            world.removeBody(id);
+        });
+    };
+
+    World.prototype.serialize = function () {
+        return _.object(_.map(this.bodies, function (body, key) {
+            return [key, body.serialize()];
+        }));
+    };
+
+    World.prototype.sync = function (changeSet) {
+        this.upsert(changeSet.upserts);
+        this.removeBodies(changeSet.deletes);
+    };
+
+    World.prototype.upsert = function (bodyStates) {
+        var world = this;
+
+        var inserts = _.difference(_.keys(bodyStates), _.keys(this.bodies));
+        var updates = _.union(_.keys(bodyStates), _.keys(this.bodies));
+
+        _.each(_.pick(bodyStates, inserts), function (bodyState, key) {
+            switch(bodyState.type)
+            {
+            case 'tank':
+                world.addBody(key, new Tank());
+                break;
+            default:
+                throw "Unknown body type";
+            }
+        });
+
+        _.each(_.pick(bodyStates, _.union(updates, inserts)), function (body, key) {
+            _.extend(world.bodies[key], body);
+        });        
+    };
+
     World.prototype.update = function (dt) {
         var world = this;
 
-        var bodies = _.toArray(this.bodies);
+        var bodies = _.values(this.bodies);
+        var keys = _.keys(this.bodies);
 
         for (var i = 0; i < bodies.length; i++) {
             var body = bodies[i];
@@ -34,9 +80,13 @@ define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry'], functio
             body.update(dt);
 
             body.pos.y = screenProjection.wrap(body.pos.y);
-
+          
         }
         
+        return { // TODO: Only return moving bodies.
+            upserts: this.serialize(),
+            deletes: {}
+        };        
     };
 
     World.prototype._drawReticules = function (ctx, perspective) {

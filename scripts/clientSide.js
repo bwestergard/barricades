@@ -15,9 +15,13 @@ require.config({
     }
 });
 
-require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst', 'World'], function (io, domReady, Tank, v, _, PhysConst, World) {
+require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst', 'World'],
+        function (io, domReady, Tank, v, _, PhysConst, World) {
 
     domReady(function () {
+
+        var world = new World();
+        window.myId = null;
 
         cnvs = document.getElementById('c');
         ctx = cnvs.getContext('2d');
@@ -57,24 +61,14 @@ require(['socketio', 'domReady', 'Tank', 'vec2d', 'lodash', 'PhysConst', 'World'
 
         socket = io.connect('/');
 
-        socket.on("update", function (players) {
-            var world = new World();
-            var me = players[socket.socket.sessionid];
+        socket.on("changeSet", function (changeSet) {
+            world.sync(changeSet);
+            myId = changeSet.playerId || myId;
+
+            var me = changeSet.upserts[myId];
 
             blank();
-
-            _.each(players, function (player) {
-                var tank = new Tank(v(player.tank.pos.x,
-                                      player.tank.pos.y),
-                                    player.tank.ori);
-                tank.colliding = player.tank.colliding;
-                tank.vel = v(player.tank.vel.x,
-                             player.tank.vel.y);
-
-                world.addBody(player.bodyId, tank);
-            });
-
-            world.draw(ctx, me.tank.pos);
+            world.draw(ctx, me.pos);
         });
 
         var commandLoop = function() {
