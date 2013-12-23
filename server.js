@@ -58,8 +58,8 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
 
         // Initial synchronization of server-client world state. Upsert every body.
         syncClients({
-            upserts: {},
-            deletes: world.serialize()
+            upserts: world.serialize(),
+            deletes: {}
         });
 
         socket.on('vroom', function (data) {

@@ -35,33 +35,27 @@ define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry'], functio
         var inserts = _.difference(_.keys(bodyStates), _.keys(this.bodies));
         var updates = _.union(_.keys(bodyStates), _.keys(this.bodies));
 
-        _.each(_.pick(bodyStates, inserts), function (body) {
-            // switch statement for instantiation of objects by type
+        _.each(_.pick(bodyStates, inserts), function (bodyState, key) {
+            switch(bodyState.type)
+            {
+            case 'tank':
+                world.addBody(key, new Tank());
+                break;
+            default:
+                throw "Unknown body type";
+            }
         });
 
-        _.each(_.pick(bodyStates, updates), function (body) {
-            
-        });
-
-        // inserts = _.difference(bodies, this.bodies);
-        // updates = union(bodies, this.bodies);
-
-        _.each(bodies, function (body, key) {
-            var body = new Tank(v(body.pos.x,
-                                  body.pos.y),
-                                body.ori);
-            body.colliding = body.tank.colliding;
-            body.vel = v(body.tank.vel.x,
-                         body.tank.vel.y);
-
-            world.addBody(key, body);
-        });
+        _.each(_.pick(bodyStates, _.union(updates, inserts)), function (body, key) {
+            _.extend(this.bodies[key], body);
+        });        
     };
 
     World.prototype.update = function (dt) {
         var world = this;
 
-        var bodies = _.toArray(this.bodies);
+        var bodies = _.values(this.bodies);
+        var keys = _.keys(this.bodies);
 
         for (var i = 0; i < bodies.length; i++) {
             var body = bodies[i];
@@ -80,9 +74,13 @@ define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry'], functio
             body.update(dt);
 
             body.pos.y = screenProjection.wrap(body.pos.y);
-
+          
         }
         
+        return { // TODO: Only return moving bodies.
+            upserts: this.serialize(),
+            deletes: {}
+        };        
     };
 
     World.prototype._drawReticules = function (ctx, perspective) {
