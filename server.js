@@ -7,6 +7,7 @@ requirejs.config({
         socketio: '../node_modules/socket.io-client/dist/socket.io',
         lodash: '../node_modules/lodash/lodash',
         Tank: 'scripts/Tank',
+        Shard: 'scripts/Shard',
         PhysConst: 'scripts/PhysConst',
         World: 'scripts/World',
         screenProjection: 'scripts/screenProjection',
@@ -15,8 +16,8 @@ requirejs.config({
     }
 });
 
-requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst', 'World'],
-          function (express, socketio, http, _, Tank, v, PhysConst, World) {
+requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'Shard', 'vec2d', 'PhysConst', 'World'],
+          function (express, socketio, http, _, Tank, Shard, v, PhysConst, World) {
 
     var app = express()
     , server = http.createServer(app).listen(80)
@@ -26,6 +27,11 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'vec2d', 'PhysConst
     app.use('/', express.static(__dirname));
 
     var world = new World();
+
+    _.each(_.range(1,5), function (x) {
+      world.addBody('foobar' + x, new Shard(v(Math.random() * 1024,80), 0));
+    });
+
     var players = {};
 
     var syncClients = function (sockets, changeSet) {

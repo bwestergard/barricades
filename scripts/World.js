@@ -1,5 +1,5 @@
-define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry', 'Tank'],
-       function (v, _, PhysConst, screenProjection, geometry, Tank) {
+define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry', 'Tank', 'Shard'],
+       function (v, _, PhysConst, screenProjection, geometry, Tank, Shard) {
 
     function World() {
         this.bodies = {};
@@ -47,6 +47,9 @@ define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry', 'Tank'],
             case 'tank':
                 world.addBody(key, new Tank());
                 break;
+            case 'shard':
+              world.addBody(key, new Shard());
+              break;
             default:
                 throw "Unknown body type";
             }
@@ -92,7 +95,7 @@ define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry', 'Tank'],
     World.prototype._drawReticules = function (ctx, perspective) {
         ctx.save();
         ctx.lineWidth = 1;
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
         var reticules = 8;
         var retSep = PhysConst.viewPort.height / reticules;
 
@@ -114,6 +117,7 @@ define(['vec2d', 'lodash', 'PhysConst', 'screenProjection', 'geometry', 'Tank'],
             ctx.stroke();
         }
         ctx.restore();
+
     }
 
     World.prototype.draw = function (ctx, perspective) {
