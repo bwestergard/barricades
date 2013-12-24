@@ -3,9 +3,9 @@ define(['vec2d','PhysConst', 'screenProjection', 'lodash'], function (v, PhysCon
   function Shard(position, orientation, verticies) {
     this.pos = position; // vector (pixels, pixels)
     this.ori = orientation; // radians
-    this.vel = v(-3,3); // pixels per second
+    this.vel = v(0,0); // pixels per second
 
-    var s = PhysConst.tank.scale;
+    var s = PhysConst.tank.scale * 0.5;
     //    this.verticies = [ v(-s,s), v(-s,-s), v(s,-s), v(s,s) ];
     this.verticies = [v(s,s), v(s,-s), v(-s,-s), v(-s,s)];
   }

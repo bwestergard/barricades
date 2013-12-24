@@ -7,7 +7,7 @@ define({
         "scale": 40
     },
     "tank": {
-        "pickup": 10,
+        "pickup": 7,
         "dragLoss": 0.8,
         "skateFactor": 2,
         "scale": 40,
@@ -17,7 +17,7 @@ define({
         "turnDrag": 0.8
     },
     "world": {
-        "aspectRatio": 1
+        "aspectRatio": 4
     },
     "viewPort": {
         "width": 900,
