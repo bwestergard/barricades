@@ -6,7 +6,6 @@ define(['vec2d','PhysConst', 'screenProjection', 'lodash'], function (v, PhysCon
     this.vel = v(0,0); // pixels per second
 
     var s = PhysConst.tank.scale * 0.5;
-    //    this.verticies = [ v(-s,s), v(-s,-s), v(s,-s), v(s,s) ];
     this.verticies = [v(s,s), v(s,-s), v(-s,-s), v(-s,s)];
   }
 
@@ -33,9 +32,6 @@ define(['vec2d','PhysConst', 'screenProjection', 'lodash'], function (v, PhysCon
     this.pos.add(this.vel);
   };
 
-  Shard.prototype.vroom = function (x) {
-  };
-
   Shard.prototype.draw = function (ctx, perspective) {
     ctx.save();
 
@@ -45,10 +41,12 @@ define(['vec2d','PhysConst', 'screenProjection', 'lodash'], function (v, PhysCon
 
     var screenPosition = screenProjection.projectScreen(perspective, this.pos);
     ctx.translate(screenPosition.x, screenPosition.y);
+    
+    var verts = _.rest(this.verts());
 
     ctx.beginPath();
-    ctx.moveTo(this.verticies[0].x, this.verticies[0].y);
-    _.each(_.rest(this.verticies), function (vert) {
+    ctx.moveTo(_.first(verts).x, _.first(verts).y);
+    _.each(_.rest(verts), function (vert) {
       ctx.lineTo(vert.x, vert.y);
     });
     ctx.closePath();

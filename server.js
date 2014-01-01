@@ -28,9 +28,9 @@ requirejs(['express', 'socket.io', 'http', 'lodash', 'Tank', 'Shard', 'vec2d', '
 
     var world = new World();
 
-    _.each(_.range(1,100), function (x) {
+    _.each(_.range(1,50), function (x) {
       world.addBody('foobar' + x, new Shard(v(Math.random() * PhysConst.viewPort.width,
-                                              Math.random() * PhysConst.viewPort.height * PhysConst.world.aspectRatio), 0));
+                                              Math.random() * PhysConst.viewPort.height * PhysConst.world.aspectRatio), 1 + Math.random() * Math.PI));
     });
 
     var players = {};
